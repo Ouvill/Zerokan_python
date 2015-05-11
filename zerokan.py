@@ -16,6 +16,7 @@ lastEvtMsgId = 0
 lastDmgMsgId = 0
 killNumber = 0
 lossNumber = 0
+crashNumber = 0
 fileName = "playerName.txt"
 startTime = 0
 endTime = 0
@@ -44,10 +45,16 @@ def getWtProcess():
 def countKillLossNumber(playerName):
     killPattern = playerName + ".* shot down"
     lossPattern = "shot down .*" + playerName
+    crashPattern = playerName + u".* は\t墜落しました"
+    
     reKillPattern = re.compile(killPattern)
     reLossPattern = re.compile(lossPattern)
+    reCrashPattern= re.compile(crashPattern)
+    
     global killNumber
     global lossNumber
+    global crashNumber
+
     for damage in damages:
         print(damage["id"])
         if reKillPattern.search(damage["msg"]):
@@ -56,6 +63,9 @@ def countKillLossNumber(playerName):
         if reLossPattern.search(damage["msg"]):
             print("loss count")
             lossNumber += 1
+        if reCrashPattern.search(damage["msg"]):
+            print("crash count")
+            crashNumber += 1
 
 # ゲームの状況を判定する。試合をしていない状態は0、試合が開始した時は1、試合中なら2、試合が終了した時は3、を返す
 def getGameState(oldMapObj,mapObj):
@@ -120,6 +130,7 @@ while WtProcess < 2:
                 startTime = datetime.datetime.today()
                 killNumber = 0
                 lossNumber = 0
+                crashNumber= 0
                 print("game start")
                 print(startTime)
             # 試合中
@@ -137,13 +148,14 @@ while WtProcess < 2:
                 endTime = datetime.datetime.today()
                 print("Player's kill count",killNumber)
                 print("Player's killed count",lossNumber)
+                print("Player's crash count",crashNumber)
                 print("game end")
                 print(endTime)
 
                 strStartTime = startTime.strftime('%Y/%m/%d-%H:%M:%S')
                 strEndTime = endTime.strftime('%Y/%m/%d-%H:%M:%S')
             
-                listResult = [strStartTime,strEndTime,killNumber,lossNumber]
+                listResult = [strStartTime,strEndTime,killNumber,lossNumber,crashNumber]
                 
                 try:
                     f = open("data.csv","a")
