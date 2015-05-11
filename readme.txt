@@ -1,51 +1,49 @@
 * WT_Flight_Recorder
-【ソフト名】WT Flight Recorder
-【著作権者】Ouvill
-【制作日】2015/5/11
-【種　別】フリーソフト
-【連絡先】https://twitter.com/Ouvill
-【動作環境】Windows95/98/ME/2000/XP
-【開発環境】Python
-―――――――――――――――――――――――――――――――――――――
-≪著作権および免責事項≫
+�y�\�t�g���zWT Flight Recorder
+�y���쌠�ҁzOuvill
+�y������z2015/5/11
+�y��@�ʁz�t���[�\�t�g
+�y�A����zhttps://twitter.com/Ouvill
+�y�J�����zPython
+                                     
+�ᒘ�쌠����іƐӎ�����
 
-　本ソフトはフリーソフトです。自由にご使用ください。なお，著作権は作者
-である"Ouvill"が保有しています。
+�@�{�\�t�g�̓t���[�\�t�g�ł��B���R�ɂ��g�p���������B�Ȃ��C���쌠�͍��
+�ł���"Ouvill"���ۗL���Ă��܂��B
 
-　このソフトウェアを使用したことによって生じたすべての障害・損害・不具
-合等に関しては、私と私の関係者および私の所属するいかなる団体・組織とも、
-一切の責任を負いません。各自の責任においてご使用ください。
+�@���̃\�t�g�E�F�A���g�p�������Ƃɂ���Đ��������ׂĂ̏�Q�E���Q�E�s��
+�����Ɋւ��ẮA���Ǝ��̊֌W�҂���ю��̏������邢���Ȃ�c�́E�g�D�Ƃ��A
+��؂̐ӔC�𕉂��܂���B�e���̐ӔC�ɂ����Ă��g�p���������B
 
-* これは何？
-  WarThunder の戦績を記録するソフトです。試合が終了するとdist/data.csvに戦績が書き込まれます。
-  記録されるデータ
-  試合開始時間、試合終了時間、撃墜数、被撃墜数
-  バグが大量にあるかと予想されます。それでも大丈夫ってひとだけ使ってください。
+* ����͉��H
+  WarThunder �̐�т��L�^����\�t�g�ł��B�������I�������dist/data.csv�ɐ�т��������܂�܂��B
+  �L�^�����f�[�^
+  �����J�n���ԁA�����I�����ԁA���Đ��A�팂�Đ��A�ė����A�n�㕨�j�󐔁A��Ԃ�j�󂳂ꂽ���A��ԂŎ��ł�����
+  �o�O����ʂɂ��邩�Ɨ\�z����܂��B����ł����v���ĂЂƂ����g���Ă��������B
   
-* 使い方
-  - distフォルダのplayerName.txt を開いてください。
-    "Ouvill"の名前を消して、あなたのWarThunder のプレイヤー名を正確に入力してください。
+* �g����
+  - dist�t�H���_��playerName.txt ���J���Ă��������B
+    "Ouvill"�̖��O�������āA���Ȃ���WarThunder �̃v���C���[���𐳊m�ɓ��͂��Ă��������B
     
-  - メモ帳でWT_Flight_Recorder.bat を開いてください。
-    一行目にWarThunder の"launcher.exe"の場所が書かれていることを確認してください。
-    もし、違っていたら修正してください。
-    デフォルトではsteamのWarThunder のフォルダを指定しています
+  - ��������WT_Flight_Recorder.bat ���J���Ă��������B
+    ��s�ڂ�WarThunder ��"launcher.exe"�̏ꏊ��������Ă��邱�Ƃ��m�F���Ă��������B
+    �����A����Ă�����C�����Ă��������B
+    �f�t�H���g�ł�steam��WarThunder �̃t�H���_���w�肵�Ă��܂�
 
-  - WT_Flight_Recorder.batをダブルクリックして起動してください。
-    WarThunder と WT_Flight_Recorderが起動します。
-    batファイルのショートカットをデスクトップを作成すると使いやすいでしょう。
+  - WT_Flight_Recorder.bat���_�u���N���b�N���ċN�����Ă��������B
+    WarThunder �� WT_Flight_Recorder���N�����܂��B
+    bat�t�@�C���̃V���[�g�J�b�g���f�X�N�g�b�v���쐬����Ǝg���₷���ł��傤�B
 
-  - ゲームが終了するごとにdistフォルダのdata.csvに試合結果が記録されます。
+  - �Q�[�����I�����邲�Ƃ�dist�t�H���_��data.csv�Ɏ������ʂ��L�^����܂��B
     
-* ファイル構成
-  - readme.txt このファイル
-  - distフォルダ 実行フォルダが入っています。
-  - buildフォルダ プログラムに必要なモジュールとか
+* �t�@�C���\��
+  - readme.txt ���̃t�@�C��
+  - dist�t�H���_ ���s�t�H���_�������Ă��܂��B
+  - build�t�H���_ �v���O�����ɕK�v�ȃ��W���[���Ƃ�
 
-* アンインストール方法
-  WT_Flight_Recorderフォルダを全て削除してください。
+* �A���C���X�g�[�����@
+  WT_Flight_Recorder�t�H���_��S�č폜���Ă��������B
 
-* 既知のバグ
-  - 味方を撃墜しても、killのカウントになります。
-  - 地面に墜落したときはloss カウントになりません。
-  - その他、沢山
+* ���m�̃o�O
+  - ���������Ă��Ă��Akill�̃J�E���g�ɂȂ�܂��B
+  - ���̑��A��R
