@@ -17,6 +17,7 @@ lastDmgMsgId = 0
 killNumber = 0
 lossNumber = 0
 crashNumber = 0
+destroyNumber = 0
 fileName = "playerName.txt"
 startTime = 0
 endTime = 0
@@ -46,14 +47,17 @@ def countKillLossNumber(playerName):
     killPattern = playerName + ".* shot down"
     lossPattern = "shot down .*" + playerName
     crashPattern = playerName + u".* は\t墜落しました"
+    destroyPattern = playerName + ".* destroyed"
     
     reKillPattern = re.compile(killPattern)
     reLossPattern = re.compile(lossPattern)
     reCrashPattern= re.compile(crashPattern)
+    reDestroyPattern= re.compile(destroyPattern)
     
     global killNumber
     global lossNumber
     global crashNumber
+    global destroyNumber
 
     for damage in damages:
         print(damage["id"])
@@ -66,6 +70,10 @@ def countKillLossNumber(playerName):
         if reCrashPattern.search(damage["msg"]):
             print("crash count")
             crashNumber += 1
+        if reDestroyPattern.search(damage["msg"]):
+            print("destroy count")
+            destroyNumber += 1
+        
 
 # ゲームの状況を判定する。試合をしていない状態は0、試合が開始した時は1、試合中なら2、試合が終了した時は3、を返す
 def getGameState(oldMapObj,mapObj):
@@ -132,6 +140,7 @@ while WtProcess < 2:
                 killNumber = 0
                 lossNumber = 0
                 crashNumber= 0
+                destroyNumber= 0
                 print("game start")
                 print(startTime)
             # 試合中
@@ -150,13 +159,14 @@ while WtProcess < 2:
                 print("Player's kill count",killNumber)
                 print("Player's killed count",lossNumber)
                 print("Player's crash count",crashNumber)
+                print("Player's destroy count",destroyNumber)
                 print("game end")
                 print(endTime)
 
                 strStartTime = startTime.strftime('%Y/%m/%d-%H:%M:%S')
                 strEndTime = endTime.strftime('%Y/%m/%d-%H:%M:%S')
             
-                listResult = [strStartTime,strEndTime,killNumber,lossNumber,crashNumber]
+                listResult = [strStartTime,strEndTime,killNumber,lossNumber,crashNumber,destroyNumber]
                 
                 try:
                     f = open("data.csv","a")
