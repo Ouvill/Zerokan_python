@@ -100,9 +100,10 @@ while WtProcess < 2:
             try:
                 mapObj = requests.get('http://localhost:8111/map_obj.json')
                 oldMapObj = mapObj
-                firstStep = False
+                startTime = datetime.datetime.today()
                 playerName=getPlayerName(fileName)
                 print(playerName)
+                firstStep = False
             except:
                 print("miss initilaizing")
 
