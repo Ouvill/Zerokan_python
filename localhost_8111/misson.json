@@ -1,0 +1,27 @@
+// localhost:8111/misson.json
+
+{
+   "objectives" : [
+      {
+         "primary" : true,
+         "status" : "in_progress",
+         "text" : "攻撃してきた\t敵地上部隊を\t撃破せよ"
+      },
+      {
+         "primary" : true,
+         "status" : "in_progress",
+         "text" : "全ての\t爆撃目標を\t破壊せよ"
+      },
+      {
+         "primary" : true,
+         "status" : "undefined",
+         "text" : "全ての\t爆撃目標を\t破壊せよ"
+      },
+      {
+         "primary" : true,
+         "status" : "in_progress",
+         "text" : "敵航空機を\t撃破せよ"
+      }
+   ],
+   "status" : "running"
+}

@@ -1,0 +1,11 @@
+// localhost:8111/gamechat?lastId=0
+
+[
+{ "id": 18, "msg": "A\t点を\t攻撃せよ！", "sender": "MillDogHoo", "enemy": false, "mode": "チーム" },
+{ "id": 19, "msg": "sizuya (F4U) を\t強襲する！</color><color=#FF50BE46> [H14]<color=#FFFFFF>", "sender": "zornzhang", "enemy": false, "mode": "チーム" },
+{ "id": 20, "msg": "誰か、\tSedoy4 (B-25J) を\t攻撃してくれ！</color><color=#FF96963C> [I16]<color=#FFFFFF>", "sender": "TinyDungeon", "enemy": false, "mode": "チーム" },
+{ "id": 21, "msg": "jjjjjjjjjjjjjjjjjj", "sender": "liaociyisheng", "enemy": false, "mode": "全て" }
+]
+
+// アクセスするときは、lastId=0をつけること
+// lastId より大きい数字しか表示されない　

@@ -1,0 +1,9 @@
+// localhost:8111/map_info.json
+
+{
+   "grid_steps" : [ 3250.0, 3250.0 ],
+   "grid_zero" : [ -98304.0, 65536.0 ],
+   "map_generation" : 19,
+   "map_max" : [ 65536.0, 65536.0 ],
+   "map_min" : [ -98304.0, -65536.0 ]
+}
