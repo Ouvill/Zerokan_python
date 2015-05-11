@@ -16,6 +16,10 @@ lastEvtMsgId = 0
 lastDmgMsgId = 0
 killNumber = 0
 lossNumber = 0
+crashNumber = 0
+destroyNumber = 0
+destroyedNumber = 0
+wreckedNumber = 0
 fileName = "playerName.txt"
 startTime = 0
 endTime = 0
@@ -44,10 +48,25 @@ def getWtProcess():
 def countKillLossNumber(playerName):
     killPattern = playerName + ".* shot down"
     lossPattern = "shot down .*" + playerName
+    crashPattern = playerName + u".* は\t墜落しました"
+    destroyPattern = playerName + ".* destroyed"
+    destroyedPattern = "destroyed .*" + playerName
+    wreckedPattern = playerName + ".* has been wrecked"
+    
     reKillPattern = re.compile(killPattern)
     reLossPattern = re.compile(lossPattern)
+    reCrashPattern= re.compile(crashPattern)
+    reDestroyPattern= re.compile(destroyPattern)
+    reDestroyedPattern = re.compile(destroyedPattern)
+    reWreckedPattern = re.compile(wreckedPattern)
+    
     global killNumber
     global lossNumber
+    global crashNumber
+    global destroyNumber
+    global destroyedNumber
+    global wreckedNumber
+
     for damage in damages:
         print(damage["id"])
         if reKillPattern.search(damage["msg"]):
@@ -56,6 +75,20 @@ def countKillLossNumber(playerName):
         if reLossPattern.search(damage["msg"]):
             print("loss count")
             lossNumber += 1
+        if reCrashPattern.search(damage["msg"]):
+            print("crash count")
+            crashNumber += 1
+        if reDestroyPattern.search(damage["msg"]):
+            print("destroy count")
+            destroyNumber += 1
+        if reDestroyedPattern.search(damage["msg"]):
+            print("destroyed count")
+            destroyedNumber += 1
+        if reWreckedPattern.search(damage["msg"]):
+            print("wrecked count")
+            wreckedNumber += 1
+            
+        
 
 # ゲームの状況を判定する。試合をしていない状態は0、試合が開始した時は1、試合中なら2、試合が終了した時は3、を返す
 def getGameState(oldMapObj,mapObj):
@@ -90,9 +123,10 @@ while WtProcess < 2:
             try:
                 mapObj = requests.get('http://localhost:8111/map_obj.json')
                 oldMapObj = mapObj
-                firstStep = False
+                startTime = datetime.datetime.today()
                 playerName=getPlayerName(fileName)
                 print(playerName)
+                firstStep = False
             except:
                 print("miss initilaizing")
 
@@ -120,6 +154,11 @@ while WtProcess < 2:
                 startTime = datetime.datetime.today()
                 killNumber = 0
                 lossNumber = 0
+                crashNumber= 0
+                destroyNumber= 0
+                destroyedNumber = 0
+                wreckedNumber = 0
+                
                 print("game start")
                 print(startTime)
             # 試合中
@@ -137,13 +176,17 @@ while WtProcess < 2:
                 endTime = datetime.datetime.today()
                 print("Player's kill count",killNumber)
                 print("Player's killed count",lossNumber)
+                print("Player's crash count",crashNumber)
+                print("Player's destroy count",destroyNumber)
+                print("Player's destoryed count",destroyedNumber)
+                print("Player's wrecked count",wreckedNumber)
                 print("game end")
                 print(endTime)
 
                 strStartTime = startTime.strftime('%Y/%m/%d-%H:%M:%S')
                 strEndTime = endTime.strftime('%Y/%m/%d-%H:%M:%S')
             
-                listResult = [strStartTime,strEndTime,killNumber,lossNumber]
+                listResult = [strStartTime,strEndTime,killNumber,lossNumber,crashNumber,destroyNumber,destroyedNumber,wreckedNumber]
                 
                 try:
                     f = open("data.csv","a")
@@ -159,9 +202,3 @@ while WtProcess < 2:
 
 if WtProcess == 2:
     print("WarThunder dont running")
-        
-
-
-        
-
-
