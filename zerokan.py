@@ -34,7 +34,7 @@ class Player:
         self.killPattern = self.playerName + ".* shot down"
         self.lossPattern = "shot down .*" + self.playerName
         self.crashPattern = self.playerName + u".* は\t墜落しました"
-    self.destroyPattern = self.playerName + ".* destroyed"
+        self.destroyPattern = self.playerName + ".* destroyed"
         self.destroyedPattern = "destroyed .*" + self.playerName
         self.wreckedPattern = self.playerName + ".* has been wrecked"
 
@@ -248,7 +248,7 @@ while WtProcess < 2:
                 print(endTime)
                 player.printResult()
 
-                player.writeRecord(startTime,endTime)
+                player.writeResult(startTime,endTime)
                 
             
     time.sleep(5)
