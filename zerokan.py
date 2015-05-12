@@ -212,7 +212,7 @@ class Twitter:
         
 
         #Ouvillは10分間の激闘の末、10機撃墜し10個地上物を破壊した。また損害は5であった。#WTFlight_Recorder
-        message=name+ "は" + str(playTimeMin) + "分間の激闘の末、" + str(result["killNumber"]) + "機撃墜し" + str(result["destroyNumber"]) + "個地上物を破壊した。また被害は" + str(result["deathNumber"])+"であった。 #WTFlingRecorder"
+        message=name+ "は" + str(playTimeMin) + "分間の激闘の末、" + str(result["killNumber"]) + "機撃墜し" + str(result["destroyNumber"]) + "個地上物を破壊した。また被害は" + str(result["deathNumber"])+"であった。 #WTFlightRecorder"
 
         params = {"status":message}
         req = self.session.post(self.url, params=params)
@@ -247,6 +247,13 @@ while WtProcess < 2:
                 print("network error")
 
             gameState = gameInfo.getGameState()
+
+                           
+            # 読み込んだlastDmgMsgId を記録
+            length = (len(gameInfo.damages))
+            if length > 0:
+                    gameInfo.lastDmgMsgId = gameInfo.damages[len(gameInfo.damages)-1]["id"]
+                    
             # 試合中じゃない時
             if gameState == 0:
                 print("not gaming")
@@ -269,12 +276,7 @@ while WtProcess < 2:
                     print(startTime)
                     gameInfo.gameInit = True
 
-                
-                # 読み込んだid を記録
-                length = (len(gameInfo.damages))
-                if length > 0:
-                    gameInfo.lastDmgMsgId = gameInfo.damages[len(gameInfo.damages)-1]["id"]
-                    player.countResult(gameInfo.damages)
+                player.countResult(gameInfo.damages)
                 print("gaming")
             
             
