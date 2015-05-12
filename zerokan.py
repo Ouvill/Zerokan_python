@@ -172,12 +172,16 @@ class Twitter:
         self.url = "https://api.twitter.com/1.1/statuses/update.json"
 
         self.session = OAuth1Session(self.CK,self.CS,self.AT,self.AS)
-    def tweetResult(self):
-        params = {"status":"hello,world!"}
+        
+    def tweetResult(self,name,playingTime,result):
+        #Ouvillは10分間の激闘の末、10機撃墜し10個地上物を破壊した。また損害は5であった。#WTFlight_Recorder
+        message=name,"は",playingTime,"分間の激闘の末",result["killNumber"],"機撃墜し",result["destroyNumber"],"個地上物を破壊した。また被害は",result["lossNumber"],"であった。 #WTFlingRecorder"
+
+        params = {"status":message}
         req = self.session.post(self.url, params=params)
 
         if req.status_code == 200:
-            print("twitter に投稿しました")
+            print("post twitter")
         else:
             print("Error:%d" % req.status_code)
         
@@ -232,10 +236,9 @@ while WtProcess < 2:
                 endTime = datetime.datetime.today()
                 print("game end")
                 print(endTime)
-                player.printRecord()
 
-                player.writeRecord(startTime,endTime)
-                
+                player.printRecord()
+                player.writeRecord(startTime,endTime)                
             
     time.sleep(5)
     WtProcess = gameInfo.getWtProcess()
