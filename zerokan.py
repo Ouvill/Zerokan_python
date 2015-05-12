@@ -8,6 +8,7 @@ import time
 import datetime
 import locale
 import csv
+from requests_oauthlib import OAuth1Session
 
 true=True
 false=False
@@ -273,7 +274,7 @@ while WtProcess < 2:
                 player.writeResult(startTime,endTime)
                 
                 twitter=Twitter()
-                twitter.tweetResult(player.playerName,playTime,player.result)
+                twitter.tweetResult(player.playerName, playTime, player.result)
             
     time.sleep(5)
     WtProcess = gameInfo.getWtProcess()
