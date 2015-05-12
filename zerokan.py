@@ -175,7 +175,7 @@ class Twitter:
         
     def tweetResult(self,name,playingTime,result):
         #Ouvillは10分間の激闘の末、10機撃墜し10個地上物を破壊した。また損害は5であった。#WTFlight_Recorder
-        message=name,"は",playingTime,"分間の激闘の末",result["killNumber"],"機撃墜し",result["destroyNumber"],"個地上物を破壊した。また被害は",result["lossNumber"],"であった。 #WTFlingRecorder"
+        message=name,"は",playingTime,"分間の激闘の末",result["killNumber"],"機撃墜し",result["destroyNumber"],"個地上物を破壊した。また被害は",result["deathNumber"],"であった。 #WTFlingRecorder"
 
         params = {"status":message}
         req = self.session.post(self.url, params=params)
@@ -238,7 +238,11 @@ while WtProcess < 2:
                 print(endTime)
 
                 player.printRecord()
-                player.writeRecord(startTime,endTime)                
+                player.writeRecord(startTime,endTime)
+
+                
+                twitter=Twitter()
+                twitter.tweetResult(player.playerName,playingTime,player.result)
             
     time.sleep(5)
     WtProcess = gameInfo.getWtProcess()
