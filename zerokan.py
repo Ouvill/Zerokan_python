@@ -103,9 +103,6 @@ class Player:
         except:
             print("save miss")
 
-    
-    
-
 class GameInfo:
     def __init__(self):
         self.firstStep=True
@@ -164,6 +161,11 @@ class GameInfo:
         self.mapObj = requests.get('http://localhost:8111/map_obj.json')
         self.damages = self.hudmsg["damage"]
 
+
+class Twitter:
+    def __init__(self)
+
+        
 setting=Setting()
 gameInfo=GameInfo()
 player=Player(getPlayerName(setting.fileName))
