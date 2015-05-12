@@ -163,8 +163,23 @@ class GameInfo:
 
 
 class Twitter:
-    def __init__(self)
+    def __init__(self):
+        self.CK ="f2EM0LCvjYKWZOldMYbQxVA31"
+        self.CS ="XEgkfIyFapjyH3TFaVcBlingP169sHC52mTOnbj7LMK5KYUjcx"
+        self.AT ="154568552-98zdzBgXC3w2GeTlbt6r6uUJqfRKWzGhh2RLYMru"
+        self.AS ="5wTkWNyXPpmUZoKPDo4Kl8gPuZ9XViaRPo17gBhS4KdUu"
 
+        self.url = "https://api.twitter.com/1.1/statuses/update.json"
+
+        self.session = OAuth1Session(self.CK,self.CS,self.AT,self.AS)
+    def tweetResult(self):
+        params = {"status":"hello,world!"}
+        req = self.session.post(self.url, params=params)
+
+        if req.status_code == 200:
+            print("twitter に投稿しました")
+        else:
+            print("Error:%d" % req.status_code)
         
 setting=Setting()
 gameInfo=GameInfo()
