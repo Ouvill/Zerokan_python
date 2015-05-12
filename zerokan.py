@@ -134,9 +134,6 @@ class Player:
         except:
             print("save miss")
 
-    
-    
-
 class GameInfo:
     def __init__(self):
         self.firstStep=True
@@ -195,6 +192,30 @@ class GameInfo:
         self.mapObj = requests.get('http://localhost:8111/map_obj.json')
         self.damages = self.hudmsg["damage"]
 
+
+class Twitter:
+    def __init__(self):
+        self.CK ="f2EM0LCvjYKWZOldMYbQxVA31"
+        self.CS ="XEgkfIyFapjyH3TFaVcBlingP169sHC52mTOnbj7LMK5KYUjcx"
+        self.AT ="154568552-98zdzBgXC3w2GeTlbt6r6uUJqfRKWzGhh2RLYMru"
+        self.AS ="5wTkWNyXPpmUZoKPDo4Kl8gPuZ9XViaRPo17gBhS4KdUu"
+
+        self.url = "https://api.twitter.com/1.1/statuses/update.json"
+
+        self.session = OAuth1Session(self.CK,self.CS,self.AT,self.AS)
+        
+    def tweetResult(self,name,playingTime,result):
+        #Ouvillは10分間の激闘の末、10機撃墜し10個地上物を破壊した。また損害は5であった。#WTFlight_Recorder
+        message=name,"は",playingTime,"分間の激闘の末",result["killNumber"],"機撃墜し",result["destroyNumber"],"個地上物を破壊した。また被害は",result["deathNumber"],"であった。 #WTFlingRecorder"
+
+        params = {"status":message}
+        req = self.session.post(self.url, params=params)
+
+        if req.status_code == 200:
+            print("post twitter")
+        else:
+            print("Error:%d" % req.status_code)
+        
 setting=Setting()
 gameInfo=GameInfo()
 player=Player(getPlayerName(setting.fileName))
@@ -249,7 +270,10 @@ while WtProcess < 2:
                 player.printResult()
 
                 player.writeResult(startTime,endTime)
+>>>>>>> feature/twitter
                 
+                twitter=Twitter()
+                twitter.tweetResult(player.playerName,playingTime,player.result)
             
     time.sleep(5)
     WtProcess = gameInfo.getWtProcess()
