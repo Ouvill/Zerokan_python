@@ -28,13 +28,13 @@ class Setting:
 class Player:
     
     def __init__(self,name):
-        self.initPlayerRecord()
+        self.initPlayerResult()
         
         self.playerName = name
         self.killPattern = self.playerName + ".* shot down"
         self.lossPattern = "shot down .*" + self.playerName
         self.crashPattern = self.playerName + u".* は\t墜落しました"
-        self.destroyPattern = self.playerName + ".* destroyed"
+    self.destroyPattern = self.playerName + ".* destroyed"
         self.destroyedPattern = "destroyed .*" + self.playerName
         self.wreckedPattern = self.playerName + ".* has been wrecked"
 
