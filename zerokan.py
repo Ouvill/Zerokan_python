@@ -212,7 +212,7 @@ class Twitter:
         
 
         #Ouvillは10分間の激闘の末、10機撃墜し10個地上物を破壊した。また損害は5であった。#WTFlight_Recorder
-        message=name+ "は" + str(playTimeMin) + "分間の激闘の末" + str(result["killNumber"]) + "機撃墜し" + str(result["destroyNumber"]) + "個地上物を破壊した。また被害は" + str(result["deathNumber"]),"であった。 #WTFlingRecorder"
+        message=name+ "は" + str(playTimeMin) + "分間の激闘の末、" + str(result["killNumber"]) + "機撃墜し" + str(result["destroyNumber"]) + "個地上物を破壊した。また被害は" + str(result["deathNumber"])+"であった。 #WTFlingRecorder"
 
         params = {"status":message}
         req = self.session.post(self.url, params=params)
