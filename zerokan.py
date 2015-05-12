@@ -49,50 +49,81 @@ class Player:
 
     # player のデータを初期化
     def initPlayerResult(self):
-        self.killNumber=0
-        self.lossNumber=0
-        self.crashNumber=0
-        self.destroyNumber=0
-        self.destroyedNumber=0
-        self.wreckedNumber=0
+        self.result = {}
+        self.result["killNumber"] = 0 #飛行機の撃墜数
+        self.result["lossNumber"] = 0 #飛行機が撃墜された数
+        self.result["crashNumber"] = 0 #飛行機が墜落(地面に激突、脱出)した数
+        self.result["deathNumber"] = 0 #死んだ数(飛行機+戦車)
+        self.result["destroyNumber"] = 0 #地上物破壊数
+        self.result["destroyedNumber"] = 0 #戦車で死んだ数
+        self.result["wreckedNumber"] = 0 #戦車で自滅(水没、脱出)した時
+
+    def countKill(self):
+        self.result["killNumber"] += 1
+
+    def countLoss(self):
+        self.result["lossNumber"] += 1
+        self.result["deathNumber"] += 1
+
+    def countCrash(self):
+        self.result["crashNumber"] += 1
+        self.result["deathNumber"] += 1
+
+    def countDestroy(self):
+        self.result["destroyNumber"] += 1
+
+    def countDestroyed(self):
+        self.result["destroyedNumber"] += 1
+        self.result["deathNumber"] += 1
+
+    def countWrecked(self):
+        self.result["wreckedNumber"] += 1
+        self.result["deathNumber"] += 1
 
     # WT の hudmsg/damageから プレイヤー名を探して、戦果を記録
     def countResult(self,damages):
         for damage in damages:
             print(damage["id"])
+            
             if self.reKillPattern.search(damage["msg"]):
                 print("kill count")
-                self.killNumber += 1
+                self.countKill()
+                
             if self.reLossPattern.search(damage["msg"]):
                 print("loss count")
-                self.lossNumber += 1
+                self.countLoss()
+                
             if self.reCrashPattern.search(damage["msg"]):
                 print("crash count")
-                self.crashNumber += 1
+                self.countCrash()
+                
             if self.reDestroyPattern.search(damage["msg"]):
                 print("destroy count")
-                self.destroyNumber += 1
+                self.countDestroy()
+                
             if self.reDestroyedPattern.search(damage["msg"]):
                 print("destroyed count")
-                self.destroyedNumber += 1
+                self.countDestroyed()
+                
             if self.reWreckedPattern.search(damage["msg"]):
                 print("wrecked count")
-                self.wreckedNumber += 1
+                self.countWrecked()
 
     # playerのデータを表示
     def printResult(self):
-        print("Player's kill count",self.killNumber)
-        print("Player's killed count",self.lossNumber)
-        print("Player's crash count",self.crashNumber)
-        print("Player's destroy count",self.destroyNumber)
-        print("Player's destoryed count",self.destroyedNumber)
-        print("Player's wrecked count",self.wreckedNumber)
+        print("Player's kill count",self.result["killNumber"])
+        # print("Player's killed count",self.result["lossNumber"])
+        # print("Player's crash count",self.result["crashNumber"])
+        print("Player's destroy count",self.result["destroyNumber"])
+        # print("Player's destoryed count",self.result["destroyedNumber"])
+        # print("Player's wrecked count",self.result["wreckedNumber"])
+        print("Player's death count",self.result["deathNumber"])
 
     # player のデータを書き込み
     def writeResult(self,startTime,endTime):
         strStartTime = startTime.strftime('%Y/%m/%d-%H:%M:%S')
         strEndTime = endTime.strftime('%Y/%m/%d-%H:%M:%S')
-        listResult = [strStartTime,strEndTime,self.killNumber,self.lossNumber,self.crashNumber,self.destroyNumber,self.destroyedNumber,self.wreckedNumber]
+        listResult = [strStartTime,strEndTime,self.result["killNumber"],self.result["lossNumber"],self.result["crashNumber"],self.result["destroyNumber"],self.result["destroyedNumber"],self.result["wreckedNumber"]]
                 
         try:
             f = open("data.csv","a")
