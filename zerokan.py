@@ -268,9 +268,7 @@ while WtProcess < 2:
                 print("game end")
                 print(endTime)
                 player.printResult()
-
                 player.writeResult(startTime,endTime)
->>>>>>> feature/twitter
                 
                 twitter=Twitter()
                 twitter.tweetResult(player.playerName,playingTime,player.result)
