@@ -145,6 +145,8 @@ class GameInfo:
         self.state=None
         self.hudmsg=None
         self.damages=None
+
+        self.gameInit = False
     
     # WTの起動状態確認-aces.exe が起動していれば 0、launcher が起動していれば 1、 両方起動していなければ 2 を返す
     def getWtProcess(self):
@@ -206,6 +208,7 @@ class Twitter:
         self.session = OAuth1Session(self.CK,self.CS,self.AT,self.AS)
         
     def tweetResult(self,name,playTime,result):
+
         #Ouvillは10分間の激闘の末、10機撃墜し10個地上物を破壊した。また損害は5であった。#WTFlight_Recorder
         message=name,"は",playTime,"分間の激闘の末",result["killNumber"],"機撃墜し",result["destroyNumber"],"個地上物を破壊した。また被害は",result["deathNumber"],"であった。 #WTFlingRecorder"
 
@@ -252,9 +255,19 @@ while WtProcess < 2:
                 player.initPlayerResult()
                 print("game start")
                 print(startTime)
+                gameInfo.gameInit = True
                 
             # 試合中
             elif gameState == 2:
+
+                if gameInfo.gameInit == False:
+                    startTime = datetime.datetime.today()
+                    player.initPlayerResult()
+                    print("game start")
+                    print(startTime)
+                    gameInfo.gameInit = True
+
+                
                 # 読み込んだid を記録
                 length = (len(gameInfo.damages))
                 if length > 0:
@@ -267,6 +280,8 @@ while WtProcess < 2:
             elif gameState == 3:
                 endTime = datetime.datetime.today()
                 playTime = endTime - startTime
+
+                gameInfo.gameInit = True
                 
                 print("game end")
                 print(endTime)
