@@ -48,7 +48,7 @@ class Player:
         print(self.playerName)
 
     # player のデータを初期化
-    def initPlayerRecord(self):
+    def initPlayerResult(self):
         self.killNumber=0
         self.lossNumber=0
         self.crashNumber=0
@@ -80,7 +80,7 @@ class Player:
                 self.wreckedNumber += 1
 
     # playerのデータを表示
-    def printRecord(self):
+    def printResult(self):
         print("Player's kill count",self.killNumber)
         print("Player's killed count",self.lossNumber)
         print("Player's crash count",self.crashNumber)
@@ -89,7 +89,7 @@ class Player:
         print("Player's wrecked count",self.wreckedNumber)
 
     # player のデータを書き込み
-    def writeRecord(self,startTime,endTime):
+    def writeResult(self,startTime,endTime):
         strStartTime = startTime.strftime('%Y/%m/%d-%H:%M:%S')
         strEndTime = endTime.strftime('%Y/%m/%d-%H:%M:%S')
         listResult = [strStartTime,strEndTime,self.killNumber,self.lossNumber,self.crashNumber,self.destroyNumber,self.destroyedNumber,self.wreckedNumber]
@@ -196,7 +196,7 @@ while WtProcess < 2:
             # 試合開始
             elif gameState == 1:
                 startTime = datetime.datetime.today()
-                player.initPlayerRecord()
+                player.initPlayerResult()
                 print("game start")
                 print(startTime)
                 
@@ -215,7 +215,7 @@ while WtProcess < 2:
                 endTime = datetime.datetime.today()
                 print("game end")
                 print(endTime)
-                player.printRecord()
+                player.printResult()
 
                 player.writeRecord(startTime,endTime)
                 
