@@ -111,14 +111,14 @@ class Player:
         print("Player's death count",self.result["deathNumber"])
 
     # player のデータを書き込み
-    def writeResult(self,startTime,endTime):
+    def writeResult(self,dataFile,startTime,endTime):
         strStartTime = startTime.strftime('%Y/%m/%d-%H:%M:%S')
         strEndTime = endTime.strftime('%Y/%m/%d-%H:%M:%S')
         listResult = [strStartTime,strEndTime,self.result["killNumber"],self.result["lossNumber"],self.result["crashNumber"],self.result["destroyNumber"],self.result["destroyedNumber"],self.result["wreckedNumber"]]
 
         try:
 
-            f = open("data.csv","a")
+            f = open(dataFile,"a")
             csvWriter = csv.writer(f)
             csvWriter.writerow(listResult)
             f.close()
@@ -222,7 +222,7 @@ else:
     sys.stderr.write("%s が見つかりません" % SETTING_FILE)
     sys.exit(1)
 
-player = ini(DEFAULT,NAME)
+player = ini.get(DEFAULT,NAME)
 
 gameInfo=GameInfo()
 
@@ -290,7 +290,8 @@ while WtProcess < 2:
                 print("game end")
                 print(endTime)
                 player.printResult()
-                player.writeResult(startTime,endTime)
+                dataFile = ini.get(DEFAULT,DATA)
+                player.writeResult(dataFile,startTime,endTime)
 
                 twitter=Twitter()
                 twitter.tweetResult(player.playerName, playTime, player.result)
@@ -300,3 +301,4 @@ while WtProcess < 2:
 
 if WtProcess == 2:
     print("WarThunder dont running")
+    exit(0)
