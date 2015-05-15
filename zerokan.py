@@ -9,6 +9,7 @@ import datetime
 import locale
 import csv
 import ConfigParser
+import os
 from requests_oauthlib import OAuth1Session
 
 true=True
@@ -36,7 +37,7 @@ class Player:
         self.reDestroyedPattern = re.compile(self.destroyedPattern)
         self.reWreckedPattern = re.compile(self.wreckedPattern)
 
-        print(self.playerName)
+        print("Welcome " + self.playerName)
 
     # player のデータを初期化
     def initPlayerResult(self):
@@ -189,13 +190,9 @@ class GameInfo:
 
 class Twitter:
     def __init__(self,CK,CS,AT,AS):
-        self.CK = CK
-        self.CS = CS
-        self.AT = AT
-        self.AS = AS
 
         self.url = "https://api.twitter.com/1.1/statuses/update.json"
-        self.session = OAuth1Session(self.CK,self.CS,self.AT,self.AS)
+        self.session = OAuth1Session(CK,CS,AT,AS)
 
     def tweetResult(self,twitterName,playTime,result):
         playTimeMin = playTime.seconds/60
@@ -212,20 +209,26 @@ class Twitter:
             print("Error:%d" % req.status_code)
 
 
+
+# メインの処理開始
+print("start WT Flight Recorder")
+
 # setting.ini ファイルの読み込み
-ini = ConfigParser.SafeConfigParser
+ini = ConfigParser.SafeConfigParser()
 if os.path.exists(SETTING_FILE):
-    ini.read.read(SETTING_FILE)
+    ini.read(SETTING_FILE)
 else:
     sys.stderr.write("%s が見つかりません" % SETTING_FILE)
     sys.exit(1)
 
-player = ini.get(DEFAULT,NAME)
+playerName = ini.get('DEFAULT','NAME')
+player=Player(playerName)
 
 gameInfo=GameInfo()
 
 WtProcess = gameInfo.getWtProcess()
-print("start WT Flight Recorder")
+
+
 while WtProcess < 2:
     print("WtProcess",WtProcess)
     if WtProcess == 0:
@@ -288,17 +291,17 @@ while WtProcess < 2:
                 print("game end")
                 print(endTime)
                 player.printResult()
-                dataFile = ini.get(DEFAULT,DATA)
+                dataFile = ini.get('DEFAULT','DATA')
                 player.writeResult(dataFile,startTime,endTime)
 
                 # Twitter の投稿機能
-                twitterFunction =ini.get(DEFAULT,TwitterFunction)
+                twitterFunction =ini.get('DEFAULT','TwitterFunction')
                 if twitterFunction:
-                    CK=ini.get(DEFAULT,CK)
-                    CS=ini.get(DEFAULT,CS)
-                    AT=ini.get(DEFAULT,AT)
-                    AS=ini.get(DEFAULT,AS)
-                    twitterName=ini.get(DEFAULT,TwitterName)
+                    CK=ini.get('DEFAULT','CK')
+                    CS=ini.get('DEFAULT','CS')
+                    AT=ini.get('DEFAULT','AT')
+                    AS=ini.get('DEFAULT','AS')
+                    twitterName=ini.get('DEFAULT','TwitterName')
                     twitter=Twitter(CK, CS, AT, AS)
                     twitter.tweetResult(twitterName, playTime, player.result)
 
