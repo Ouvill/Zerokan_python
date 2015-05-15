@@ -188,22 +188,20 @@ class GameInfo:
 
 
 class Twitter:
-    def __init__(self):
-        self.CK ="f2EM0LCvjYKWZOldMYbQxVA31"
-        self.CS ="XEgkfIyFapjyH3TFaVcBlingP169sHC52mTOnbj7LMK5KYUjcx"
-        self.AT ="154568552-98zdzBgXC3w2GeTlbt6r6uUJqfRKWzGhh2RLYMru"
-        self.AS ="5wTkWNyXPpmUZoKPDo4Kl8gPuZ9XViaRPo17gBhS4KdUu"
+    def __init__(self,CK,CS,AT,AS):
+        self.CK = CK
+        self.CS = CS
+        self.AT = AT
+        self.AS = AS
 
         self.url = "https://api.twitter.com/1.1/statuses/update.json"
-
         self.session = OAuth1Session(self.CK,self.CS,self.AT,self.AS)
 
-    def tweetResult(self,name,playTime,result):
+    def tweetResult(self,twitterName,playTime,result):
         playTimeMin = playTime.seconds/60
 
-
         #Ouvillは10分間の激闘の末、10機撃墜し10個地上物を破壊した。また損害は5であった。#WTFlight_Recorder
-        message=name+ "は" + str(playTimeMin) + "分間の激闘の末、" + str(result["killNumber"]) + "機撃墜し" + str(result["destroyNumber"]) + "個地上物を破壊した。また被害は" + str(result["deathNumber"])+"であった。 #WTFlightRecorder"
+        message=twitterName + "は" + str(playTimeMin) + "分間の激闘の末、" + str(result["killNumber"]) + "機撃墜し" + str(result["destroyNumber"]) + "個地上物を破壊した。また被害は" + str(result["deathNumber"])+"であった。 #WTFlightRecorder"
 
         params = {"status":message}
         req = self.session.post(self.url, params=params)
@@ -293,8 +291,16 @@ while WtProcess < 2:
                 dataFile = ini.get(DEFAULT,DATA)
                 player.writeResult(dataFile,startTime,endTime)
 
-                twitter=Twitter()
-                twitter.tweetResult(player.playerName, playTime, player.result)
+                # Twitter の投稿機能
+                twitterFunction =ini.get(DEFAULT,TwitterFunction)
+                if twitterFunction:
+                    CK=ini.get(DEFAULT,CK)
+                    CS=ini.get(DEFAULT,CS)
+                    AT=ini.get(DEFAULT,AT)
+                    AS=ini.get(DEFAULT,AS)
+                    twitterName=ini.get(DEFAULT,TwitterName)
+                    twitter=Twitter(CK, CS, AT, AS)
+                    twitter.tweetResult(twitterName, playTime, player.result)
 
     time.sleep(5)
     WtProcess = gameInfo.getWtProcess()
