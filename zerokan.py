@@ -16,16 +16,6 @@ false=False
 
 SETTING_FILE = setting.ini
 
-
-def getPlayerName(fileName):
-    f = open(fileName,"r")
-    readline = f.readlines()
-    f.close()
-    playerName = readline[0]
-    playerName = playerName.strip()
-    playerName = playerName.strip("\n")
-    return playerName
-
 class Player:
 
     def __init__(self,name):
