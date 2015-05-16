@@ -1,4 +1,4 @@
-#coding: UTF-8
+#coding:UTF-8
 import subprocess
 import sys
 import json
@@ -8,29 +8,20 @@ import time
 import datetime
 import locale
 import csv
+import ConfigParser
+import os
 from requests_oauthlib import OAuth1Session
 
 true=True
 false=False
 
-def getPlayerName(fileName):
-    f = open(fileName,"r")
-    readline = f.readlines()
-    f.close()
-    playerName = readline[0]
-    playerName = playerName.strip()
-    playerName = playerName.strip("\n")
-    return playerName
-
-class Setting:
-    def __init__(self):
-        self.fileName = "playerName.txt"
+SETTING_FILE = "setting_test.ini"
 
 class Player:
-    
+
     def __init__(self,name):
         self.initPlayerResult()
-        
+
         self.playerName = name
         self.killPattern = self.playerName + ".* shot down"
         self.lossPattern = "shot down .*" + self.playerName
@@ -46,7 +37,7 @@ class Player:
         self.reDestroyedPattern = re.compile(self.destroyedPattern)
         self.reWreckedPattern = re.compile(self.wreckedPattern)
 
-        print(self.playerName)
+        print("Welcome " + self.playerName)
 
     # player のデータを初期化
     def initPlayerResult(self):
@@ -85,27 +76,27 @@ class Player:
     def countResult(self,damages):
         for damage in damages:
             print(damage["id"])
-            
+
             if self.reKillPattern.search(damage["msg"]):
                 print("kill count")
                 self.countKill()
-                
+
             if self.reLossPattern.search(damage["msg"]):
                 print("loss count")
                 self.countLoss()
-                
+
             if self.reCrashPattern.search(damage["msg"]):
                 print("crash count")
                 self.countCrash()
-                
+
             if self.reDestroyPattern.search(damage["msg"]):
                 print("destroy count")
                 self.countDestroy()
-                
+
             if self.reDestroyedPattern.search(damage["msg"]):
                 print("destroyed count")
                 self.countDestroyed()
-                
+
             if self.reWreckedPattern.search(damage["msg"]):
                 print("wrecked count")
                 self.countWrecked()
@@ -121,13 +112,14 @@ class Player:
         print("Player's death count",self.result["deathNumber"])
 
     # player のデータを書き込み
-    def writeResult(self,startTime,endTime):
+    def writeResult(self,dataFile,startTime,endTime):
         strStartTime = startTime.strftime('%Y/%m/%d-%H:%M:%S')
         strEndTime = endTime.strftime('%Y/%m/%d-%H:%M:%S')
         listResult = [strStartTime,strEndTime,self.result["killNumber"],self.result["lossNumber"],self.result["crashNumber"],self.result["destroyNumber"],self.result["destroyedNumber"],self.result["wreckedNumber"]]
-                
+
         try:
-            f = open("data.csv","a")
+
+            f = open(dataFile,"a")
             csvWriter = csv.writer(f)
             csvWriter.writerow(listResult)
             f.close()
@@ -147,7 +139,7 @@ class GameInfo:
         self.damages=None
 
         self.gameInit = False
-    
+
     # WTの起動状態確認-aces.exe が起動していれば 0、launcher が起動していれば 1、 両方起動していなければ 2 を返す
     def getWtProcess(self):
         cmd = "tasklist"
@@ -170,7 +162,7 @@ class GameInfo:
     def getGameState(self):
         oldMapObjTxt = self.oldMapObj.text
         mapObjTxt = self.mapObj.text
-        
+
         if oldMapObjTxt == "" and  mapObjTxt== "":
             return 0
         elif oldMapObjTxt == ""  and mapObjTxt != "":
@@ -197,22 +189,16 @@ class GameInfo:
 
 
 class Twitter:
-    def __init__(self):
-        self.CK ="f2EM0LCvjYKWZOldMYbQxVA31"
-        self.CS ="XEgkfIyFapjyH3TFaVcBlingP169sHC52mTOnbj7LMK5KYUjcx"
-        self.AT ="154568552-98zdzBgXC3w2GeTlbt6r6uUJqfRKWzGhh2RLYMru"
-        self.AS ="5wTkWNyXPpmUZoKPDo4Kl8gPuZ9XViaRPo17gBhS4KdUu"
+    def __init__(self,CK,CS,AT,AS):
 
         self.url = "https://api.twitter.com/1.1/statuses/update.json"
+        self.session = OAuth1Session(CK,CS,AT,AS)
 
-        self.session = OAuth1Session(self.CK,self.CS,self.AT,self.AS)
-        
-    def tweetResult(self,name,playTime,result):
+    def tweetResult(self,twitterName,playTime,result):
         playTimeMin = playTime.seconds/60
-        
 
         #Ouvillは10分間の激闘の末、10機撃墜し10個地上物を破壊した。また損害は5であった。#WTFlight_Recorder
-        message=name+ "は" + str(playTimeMin) + "分間の激闘の末、" + str(result["killNumber"]) + "機撃墜し" + str(result["destroyNumber"]) + "個地上物を破壊した。また被害は" + str(result["deathNumber"])+"であった。 #WTFlightRecorder"
+        message=twitterName + "は" + str(playTimeMin) + "分間の激闘の末、" + str(result["killNumber"]) + "機撃墜し" + str(result["destroyNumber"]) + "個地上物を破壊した。また被害は" + str(result["deathNumber"])+"であった。 #WTFlightRecorder"
 
         params = {"status":message}
         req = self.session.post(self.url, params=params)
@@ -221,13 +207,26 @@ class Twitter:
             print("post twitter")
         else:
             print("Error:%d" % req.status_code)
-        
-setting=Setting()
-gameInfo=GameInfo()
-player=Player(getPlayerName(setting.fileName))
 
+
+
+# メインの処理開始
+print("start WT Flight Recorder")
+
+# setting.ini ファイルの読み込み
+ini = ConfigParser.SafeConfigParser()
+if os.path.exists(SETTING_FILE):
+    ini.read(SETTING_FILE)
+else:
+    sys.stderr.write("%s が見つかりません" % SETTING_FILE)
+    sys.exit(1)
+
+playerName = ini.get('DEFAULT','NAME')
+player=Player(playerName)
+
+gameInfo=GameInfo()
 WtProcess = gameInfo.getWtProcess()
-print("start WT Flight Recorder")    
+
 while WtProcess < 2:
     print("WtProcess",WtProcess)
     if WtProcess == 0:
@@ -248,16 +247,16 @@ while WtProcess < 2:
 
             gameState = gameInfo.getGameState()
 
-                           
+
             # 読み込んだlastDmgMsgId を記録
             length = (len(gameInfo.damages))
             if length > 0:
                     gameInfo.lastDmgMsgId = gameInfo.damages[len(gameInfo.damages)-1]["id"]
-                    
+
             # 試合中じゃない時
             if gameState == 0:
                 print("not gaming")
-            
+
             # 試合開始
             elif gameState == 1:
                 startTime = datetime.datetime.today()
@@ -265,7 +264,7 @@ while WtProcess < 2:
                 print("game start")
                 print(startTime)
                 gameInfo.gameInit = True
-                
+
             # 試合中
             elif gameState == 2:
 
@@ -278,25 +277,35 @@ while WtProcess < 2:
 
                 player.countResult(gameInfo.damages)
                 print("gaming")
-            
-            
+
+
            #試合終了
             elif gameState == 3:
                 endTime = datetime.datetime.today()
                 playTime = endTime - startTime
 
                 gameInfo.gameInit = True
-                
+
                 print("game end")
                 print(endTime)
                 player.printResult()
-                player.writeResult(startTime,endTime)
-                
-                twitter=Twitter()
-                twitter.tweetResult(player.playerName, playTime, player.result)
-            
+                dataFile = ini.get('DEFAULT','DATA')
+                player.writeResult(dataFile,startTime,endTime)
+
+                # Twitter の投稿機能
+                twitterFunction =ini.get('DEFAULT','TwitterFunction')
+                if twitterFunction:
+                    CK="3gs1JRC9ikUCkppthko3QI32T"
+                    CS="QPOz40YMGLPFoBxwwNKh6nGOwiPUPi7Jq14jshE4OuLpqMOptN"
+                    AT=ini.get('DEFAULT','AT')
+                    AS=ini.get('DEFAULT','AS')
+                    twitterName=ini.get('DEFAULT','TwitterName')
+                    twitter=Twitter(CK, CS, AT, AS)
+                    twitter.tweetResult(twitterName, playTime, player.result)
+
     time.sleep(5)
     WtProcess = gameInfo.getWtProcess()
 
 if WtProcess == 2:
     print("WarThunder dont running")
+    exit(0)
