@@ -15,7 +15,7 @@ from requests_oauthlib import OAuth1Session
 true=True
 false=False
 
-SETTING_FILE = setting.ini
+SETTING_FILE = "setting_test.ini"
 
 class Player:
 
@@ -225,9 +225,7 @@ playerName = ini.get('DEFAULT','NAME')
 player=Player(playerName)
 
 gameInfo=GameInfo()
-
 WtProcess = gameInfo.getWtProcess()
-
 
 while WtProcess < 2:
     print("WtProcess",WtProcess)
@@ -297,8 +295,8 @@ while WtProcess < 2:
                 # Twitter の投稿機能
                 twitterFunction =ini.get('DEFAULT','TwitterFunction')
                 if twitterFunction:
-                    CK=ini.get('DEFAULT','CK')
-                    CS=ini.get('DEFAULT','CS')
+                    CK="3gs1JRC9ikUCkppthko3QI32T"
+                    CS="QPOz40YMGLPFoBxwwNKh6nGOwiPUPi7Jq14jshE4OuLpqMOptN"
                     AT=ini.get('DEFAULT','AT')
                     AS=ini.get('DEFAULT','AS')
                     twitterName=ini.get('DEFAULT','TwitterName')
