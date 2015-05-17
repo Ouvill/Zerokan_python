@@ -10,12 +10,13 @@ import locale
 import csv
 import ConfigParser
 import os
+import codecs
 from requests_oauthlib import OAuth1Session
 
 true=True
 false=False
 
-SETTING_FILE = "setting_test.ini"
+SETTING_FILE = "setting.ini"
 
 class Player:
 
@@ -120,7 +121,7 @@ class Player:
         try:
 
             f = open(dataFile,"a")
-            csvWriter = csv.writer(f)
+            csvWriter = csv.writer(f,lineterminator="\n")
             csvWriter.writerow(listResult)
             f.close()
             print("save result")
@@ -177,7 +178,7 @@ class GameInfo:
         self.mapObj = requests.get('http://localhost:8111/map_obj.json')
         self.oldMapObj = self.mapObj
         self.firstStep = False
-        print("firstStep",self.firstStep)
+        print("firstStep complete")
 
     # aces 起動中に繰り返し行う動作
     def reloadLocalHost(self):
@@ -216,12 +217,14 @@ print("start WT Flight Recorder")
 # setting.ini ファイルの読み込み
 ini = ConfigParser.SafeConfigParser()
 if os.path.exists(SETTING_FILE):
-    ini.read(SETTING_FILE)
+    f = codecs.open(SETTING_FILE,'r','shift_jis')
+    ini.readfp(f)
+    f.close()
 else:
     sys.stderr.write("%s が見つかりません" % SETTING_FILE)
     sys.exit(1)
 
-playerName = ini.get('DEFAULT','NAME')
+playerName = ini.get('DEFAULT','NAME').strip()
 player=Player(playerName)
 
 gameInfo=GameInfo()
@@ -234,7 +237,7 @@ while WtProcess < 2:
 
         if gameInfo.firstStep:
             print("firstStep",gameInfo.firstStep)
-            time.sleep(15)
+            time.sleep(10)
             gameInfo.acesInit()
 
         # aces.exeが起動中繰り返し行う動作
@@ -293,12 +296,18 @@ while WtProcess < 2:
                 player.writeResult(dataFile,startTime,endTime)
 
                 # Twitter の投稿機能
-                twitterFunction =ini.get('DEFAULT','TwitterFunction')
+                twitterFunction =bool(ini.get('DEFAULT','TwitterFunction'))
+                if twitterFunction == "True":
+                    twitterFunction = True
+                else:
+                    twitterFunction = False
+                print ("twitterFunction="+str(twitterFunction))
+
                 if twitterFunction:
-                    CK="3gs1JRC9ikUCkppthko3QI32T"
-                    CS="QPOz40YMGLPFoBxwwNKh6nGOwiPUPi7Jq14jshE4OuLpqMOptN"
-                    AT=ini.get('DEFAULT','AT')
-                    AS=ini.get('DEFAULT','AS')
+                    CK=ini.get('DEFAULT','Consumer_Key')
+                    CS=ini.get('DEFAULT','Consumer_Secret')
+                    AT=ini.get('DEFAULT','Access_Token')
+                    AS=ini.get('DEFAULT','Access_Token_Secret')
                     twitterName=ini.get('DEFAULT','TwitterName')
                     twitter=Twitter(CK, CS, AT, AS)
                     twitter.tweetResult(twitterName, playTime, player.result)
@@ -308,4 +317,4 @@ while WtProcess < 2:
 
 if WtProcess == 2:
     print("WarThunder dont running")
-    exit(0)
+    sys.exit(0)
