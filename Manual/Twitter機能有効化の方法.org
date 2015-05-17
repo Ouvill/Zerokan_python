@@ -1,0 +1,27 @@
+* Twitter 機能有効化の方法
+  アクセスキーの取得方法を実装できていないので、各自でツイッターの投稿に必要なキーを取得してください。以下方法
+
+  - https://apps.twitter.com/ にアクセスしてください。
+
+  -"Create New App" をクリック
+
+    [[file:figures/CreateNewApp.png]]
+
+  - 以下の項目を入力し、"Create your Twitter application" をクリック
+    - NAME: 適当(WT Flight Recorder + 数字とか？)
+    - Description : 適当(WT の戦績を記録するアプリケーション)
+    - Website : 適当(TwitterのURLとか？)
+
+      [[file:figures/CreateAnApplication.png]]
+
+  - "Keys and Access Token" をクリック
+
+    [[file:figures/ApplicationDetails.png]]
+
+  - "Create my access token" をクリック
+
+    [[file:figures/KeysAndAccessTokens.png]]
+
+  - それぞれの対応するキーをsetting.iniに書き込む
+
+    [[file:figures/AccessTokenKey.png]]
